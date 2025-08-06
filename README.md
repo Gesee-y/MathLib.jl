@@ -1,20 +1,20 @@
-# MathLib.jl: Game development mathematic kit
+# GDMathLib.jl: Game development mathematic kit
 
 Ever wanted to build a game or a game engine but stumbled on tricky math concepts ?
 You want to build your game but you don't have the time to learn about quaternions ?
 Then this package is for you.
-**MathLib.jl** takes away all the hassle and boilerplates of game maths and offer a high performance, ready to use toolkit.
+**GDMathLib.jl** takes away all the hassle and boilerplates of game maths and offer a high performance, ready to use toolkit.
 
 ## Installation
 
 ```julia
-julia> ]add MathLib
+julia> ]add GDMathLib
 ```
 
 For the development version
 
 ```julia
-julia> ]add https://github.com/Gesee-y/MathLib.jl
+julia> ]add https://github.com/Gesee-y/GDMathLib.jl
 ```
 
 ## Features
@@ -42,7 +42,7 @@ julia> ]add https://github.com/Gesee-y/MathLib.jl
 ## Example
 
 ```julia
-using MathLib
+using GDMathLib
 
 a = Vec3f(1,2,3)
 b = Vec3f(7,5,9)
@@ -58,4 +58,5 @@ This package is licensed under the MIT License.
 ## Bug report
 
 If you encounter any bug or precision problem, don't hesitate to leave an issue.
+
 It helps us improve the package.
