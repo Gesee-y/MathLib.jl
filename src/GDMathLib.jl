@@ -1,4 +1,4 @@
-module MathLib
+module GDMathLib
 
 # `i` stands for "immutable" not "int" but `f` stands for `float`
 export StaticVector, SMatrix, iSMatrix, SVector, iSVector
@@ -25,10 +25,6 @@ export wrap, posmod, lerp, inverse_lerp
 
 ## A mathematics library for the engine ##
 include(joinpath("StaticObjects.jl","src","StaticObjects.jl"))
-
-# using .StaticObjects
-
-using LinearAlgebra
 
 include("vectors.jl")
 include("matrix.jl")
@@ -100,5 +96,6 @@ function main()
 end
 
 #main()
+
 
 end # module
