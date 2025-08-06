@@ -9,56 +9,60 @@
 		w :: Int
 		h :: Int
 """
-mutable struct Rect2D
-	x :: Int
-	y :: Int
-
-	# The Rect dimension
-	w :: Int
-	h :: Int
+mutable struct Rect{T, N}
+	origin::SVector{T, N}
+	dimensions::SVector{T, N}
 	
 	# Constructors #
 	
-	Rect2D() = new(0,0,0,0)
-	Rect2D(x::Integer,y::Integer,w::Integer,h::Integer) = new(x,y,w, h,)
-	
-	function Rect2D(v1::Vector2D,v2::Vector2D)
-		tl = (v1.x < v2.x) ? v1 : v2
-		br = (tl == v1) ? v2 : v1
-		
-		new(tl.x,tl.y,br.x - tl.x, br.y - tl.y)
-	end
+	Rect(v1::SVector{T1, N}, v2::SVector{T2, N}) where {T1,T2,N} = new{promote_type(T1,T2),N}(v1, v2)
+	Rect{T}(v1::SVector{<:Number, N}, v2::SVector{<:Number, N}) where {T,N} = new{T,N}(convert.(T,v1), v2)
+	Rect{T,N}(v1::SVector{T, N}, v2::SVector{T, N}) where {T,N} = new{T,N}(convert.(T,v1), v2)
 end
 
-function point_in_rect(p::Vector2D,r::Rect2D)
-	condition1 = (r.x <= p.x <= (r.x+r.w))
-	condition2 = (r.y <= p.y <= (r.y+r.h))
+const Rect2D{T} = Rect{T,2}
+const Rect2Di = Rect2D{Int}
+const Rect2Df = Rect2D{Float32}
 
-	return (condition1 && condition2)
-end
+Rect2Di() = Rect2Di(0,0,0,0)
+Rect2Di(x::Integer,y::Integer,w::Integer,h::Integer) = Rect{Int}(Vec2i(x,y),Vec2i(w, h))
 
-function has_intersection(r1::Rect2D,r2::Rect2D)
-	dist = iVec2(r1.x-r2.x,r1.y-r2.y)
-	v1 = iVec2(2r1.x-r1.w,2r1.y-r1.h)
-	v2 = iVec2(2r2.x-r2.w,2r2.y-r2.h)
+Rect2Df() = Rect{2}(0,0,0,0)
+Rect2Df(x::Real,y::Real,w::Real,h::Real) = Rect{Float32}(Vec2f(x,y),Vec2f(w, h))
 
-	return norm(dist) < (norm(v1) + norm(v2))
-end
+const Rect3D{T} = Rect{T,3}
+const Rect3Di = Rect3D{Int}
+const Rect3Df = Rect3D{Float32}
 
-function intersection(r1::Rect2D,r2::Rect2D)
-	tl = _is_the_leftmost(r1,r2) ? iVec2(r2.x,r2.y) : iVec2(r1.x,r1.y)
-	br = _is_the_leftmost(r1,r2) ? iVec2(r1.x+r1.w,r1.y+r1.h) : iVec2(r2.x+r2.w,r2.y+r2.h)
+Rect3Di() = Rect3Di(0,0,0,0)
+Rect3Di(x::Integer,y::Integer,w::Integer,h::Integer) = Rect{Int}(Vec3i(x,y),Vec3i(w, h))
+Rect3Di(v1::Vector3D,v2::Vector3D) = Rect{3}(v1, v2)
 
-	if (tl.x > br.x || tl.y > br.y) return nothing
-	elseif (tl.x == br.x || tl.y == br.y)
-		if tl.x == br.x & tl.y == br.y
-			return tl
-		end
+Rect3Df() = Rect{3}(0,0,0,0)
+Rect3Df(x::Real,y::Real,z::Real,w::Real,h::Real,d::Real) = Rect{Float32}(Vec3f(x,y,z),Vec3f(w,h,d))
+Rect3Df(v1::Vector3D,v2::Vector3D) = Rect3D{Float32}(v1, v2)
 
-		return Ray{Int,2}(tl,br)
+
+function Base.getproperty(r::Rect2D, s::Symbol)
+	if s === :x
+		return r.origin.x
+	elseif s === :y
+		return r.origin.y
+	elseif s === :w
+		return r.dimensions.x
+	elseif s === :h
+		return r.dimensions.y
+	elseif s === :origin
+		return getfield(r, :origin)
+	elseif s === :dimensions
+		return getfield(r, :dimensions)
 	else
-		return Rect2D(tl,br)
+		error("Rect2D doesn't have a field $s.")
 	end
 end
+Base.getindex(r::Rect2D, i::Int) = getproperty(r, (:x,:y,:w,:h)[i])
 
-_is_the_leftmost(r1::Rect2D,r2::Rect2D) = r1.x < r2.x
+function get_center(r::Rect2D)
+	return iVec2(r.x+r.w/2, r.y+r.h/2)
+end
+

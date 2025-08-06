@@ -18,6 +18,8 @@ const ifRGBA = iQuat{Float32}
 const RED    = iRGBA(255,0,0,255)
 const GREEN  = iRGBA(0,255,0,255)
 const BLUE   = iRGBA(0,0,255,255)
+const YELLOW = iRGBA(255,255,0,255)
+const PURPLE = iRGBA(128,0,128,255)
 
 const WHITE  = iRGBA(255)
 const BLACK  = iRGBA(0)
