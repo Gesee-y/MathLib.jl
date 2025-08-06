@@ -1,7 +1,8 @@
-name = "MathLib"
+name = "GDMathLib"
 uuid = "ed54f85f-91e8-4912-9e4a-a43af611f8a9"
 authors = ["Kaptue Talom Lael <gesee37@gmail.com>"]
 version = "1.2.0"
 
 [compat]
+
 julia = "1.9"
